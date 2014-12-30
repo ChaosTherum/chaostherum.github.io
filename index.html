@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clicker Heroes Calculator</title>
+    <link rel="stylesheet" type="text/css" href="ClickerHeroesCalculator.css">
+    <script type="text/javascript" src="ClickerHeroesJSON.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+<div id="main">
+    <div id="header">
+        <h1>Clicker Heroes Calculator</h1>
+
+        <p>Made by VikeStep and stennett</p>
+    </div>
+    <div id="out">
+        <div id="infoheader">
+            Info
+        </div>
+        <div id="outdata1">
+            <div id="efficiencies">
+                <p style="text-align: center; padding: 0; margin: 0; font-weight: bold; border-bottom: 1px solid;">Next
+                    20 Purchases</p>
+                <table id="efficiencyTableOut">
+                </table>
+            </div>
+            <div id="generaldata">
+                Total DPS:
+                <div id="statstotaldps" style="display:inline-block;">0</div>
+                <br/>
+                Click Damage:
+                <div id="statsclickdamage" style="display:inline-block;">0</div>
+                <br/>
+                Total Gold Per Second:
+                <div id="statstotalgps" style="display:inline-block;">0</div>
+                <br/>
+                Hero Souls:
+                <div id="statsherosouls" style="display:inline-block;">0</div>
+                <br/>
+                Dark Rituals Used:
+                <div id="statsdarkrituals" style="display:inline-block;">0</div>
+                <br/>
+                Energized Dark Rituals Used:
+                <div id="statsenergizeddarkrituals" style="display:inline-block;">0</div>
+                <br/>
+                Achievements Unlocked:
+                <div id="statsachievementsunlocked" style="display:inline-block;">0/87</div>
+                <br/>
+                Total Hero Levels:
+                <div id="statsherolevels" style="display:inline-block;">0</div>
+                <br/>
+                Hero Souls Gained From Ascending:
+                <div id="statsgainedherosouls" style="display:inline-block;">0</div>
+                <br/>
+                Achievement Multiplier:
+                <div id="statsachievementmultiplier" style="display:inline-block;">0</div>
+                <br/>
+                Upgrade Multiplier (that affects all heroes):
+                <div id="statsupgrademultiplier" style="display:inline-block;">0</div>
+                <br/>
+                Hero Souls Multiplier:
+                <div id="statsherosoulsmultiplier" style="display:inline-block;">0</div>
+                <br/>
+                Dark Ritual Multiplier:
+                <div id="statsdarkritualmultiplier" style="display:inline-block;">0</div>
+                <br/>
+                Efficiency Formula:
+                <div id="statsefficiencyType" style="display:inline-block;">1</div>
+            </div>
+        </div>
+        <div id="outdata2">
+            <div id="piechartdiv">
+                <div id="piechart" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div id="herodata">
+                <table id="heroTableOut">
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="in">
+        <div id="savediv">
+            <label for="savedata">Enter Save Data:</label><input type="text" id="savedata" name="savedata"/>
+            <input id="updateSaveData" type="button" value="Use Save Data"/>
+        </div>
+        <div id="indata1">
+            <div id="options">
+                <label for="enableClicking">Enable Clicking </label><input type="checkbox" name="enableClicking"
+                                                                           id="enableClicking"
+                                                                           onchange="updateValues()"/>
+                <label for="enableCritical">Enable Critical </label><input type="checkbox" name="enableCritical"
+                                                                           id="enableCritical"
+                                                                           onchange="updateValues()"/><br/>
+                <label for="clickSpeed">Click Speed: </label><input type="number" id="clickSpeed" name="clickSpeed"
+                                                                    value="0" onchange="updateValues()" min="0"
+                                                                    max="40"/><br/>
+                <label for="currentZone">Current Zone: </label><input type="number" id="currentZone" name="currentZone"
+                                                                      value="1" onchange="updateValues()"/><br/>
+                <label for="enableHeroSouls">Check for Hero Souls? </label><input type="checkbox" name="enableHeroSouls"
+                                                                                  id="enableHeroSouls"
+                                                                                  onchange="updateValues()"/><br/>
+                <label for="desiredHeroSouls">Desired Hero Souls: </label><input type="number" id="desiredHeroSouls"
+                                                                                 name="desiredHeroSouls"
+                                                                                 value="0"
+                                                                                 onchange="updateValues()"/><br/>
+                <input id="useDarkRitual" type="button" value="Use Dark Ritual"/>
+                <input id="useEnergDarkRitual" type="button" value="Use Energized Dark Ritual"/>
+            </div>
+            <div id="buttons">
+                <input id="saveAll" type="button" value="Save Your Data"/><br/>
+                <input id="clearSave" type="button" value="Clear Save Data"/><br/>
+                <input id="updateValues" type="button" value="Re-Calculate"/><br/>
+                <input id="changeEfficiencyType" type="button" value="Change Formula"/><br/>
+                <input id="enableScientific" type="button" value="Use Scientific"/>
+            </div>
+        </div>
+        <div id="indata2">
+            <div id="navbar" style="text-align: center;">
+                <a class=link data-link="first" href="#nav">Heroes</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a class=link data-link="second" href="#nav">Ancients</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a class=link data-link="third" href="#nav">Achievements</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a class=link data-link="fourth" href="#nav">FAQ</a>
+            </div>
+            <div class=navContainer>
+                <div class=navItem id="heronavinput" data-link="first">
+                    <div id="heroTable">
+                        <table id="heroTableIn" style="text-align:center;">
+                            <tr>
+                                <td><a><img id="0" src="heroSprites/heroes/0.PNG" alt="Cid, the Helpful Adventurer"></a></td>
+                                <td><a><img id="1" src="heroSprites/heroes/1.PNG" alt="Treebeast"></a></td>
+                                <td><a><img id="2" src="heroSprites/heroes/2.PNG" alt="Ivan, the Drunken Brawler"></a></td>
+                                <td><a><img id="3" src="heroSprites/heroes/3.PNG" alt="Brittany, Beach Princess"></a></td>
+                            </tr>
+                            <tr>
+                                <td><a><img id="4" src="heroSprites/heroes/4.PNG" alt="The Wandering Fisherman"></a></td>
+                                <td><a><img id="5" src="heroSprites/heroes/5.PNG" alt="Betty Clicker"></a></td>
+                                <td><a><img id="6" src="heroSprites/heroes/6.PNG" alt="The Masked Samurai"></a></td>
+                                <td><a><img id="7" src="heroSprites/heroes/7.PNG" alt="Leon"></a></td>
+                            </tr>
+                            <tr>
+                                <td><a><img id="8" src="heroSprites/heroes/8.PNG" alt="The Great Forest Seer"></a></td>
+                                <td><a><img id="9" src="heroSprites/heroes/9.PNG" alt="Alexa, Assassin"></a></td>
+                                <td><a><img id="10" src="heroSprites/heroes/10.PNG" alt="Natalia, Ice Princess"></a></td>
+                                <td><a><img id="11" src="heroSprites/heroes/11.PNG" alt="Mercedes, Duchess of Blades"></a></td>
+                            </tr>
+                            <tr>
+                                <td><a><img id="12" src="heroSprites/heroes/12.PNG" alt="Bobby, Bounty Hunter"></a></td>
+                                <td><a><img id="13" src="heroSprites/heroes/13.PNG" alt="Broyle Lindeoven, Fire Mage"></a></td>
+                                <td><a><img id="14" src="heroSprites/heroes/14.PNG" alt="Sir George II, King's Guard"></a></td>
+                                <td><a><img id="15" src="heroSprites/heroes/15.PNG" alt="King Midas"></a></td>
+                            </tr>
+                            <tr>
+                                <td><a><img id="16" src="heroSprites/heroes/16.PNG" alt="Referi Jerator, Ice Wizard"></a></td>
+                                <td><a><img id="17" src="heroSprites/heroes/17.PNG" alt="Abbadon"></a></td>
+                                <td><a><img id="18" src="heroSprites/heroes/18.PNG" alt="Ma Zhu"></a></td>
+                                <td><a><img id="19" src="heroSprites/heroes/19.PNG" alt="Amenhotep"></a></td>
+                            </tr>
+                            <tr>
+                                <td><a><img id="20" src="heroSprites/heroes/20.PNG" alt="Beastlord"></a></td>
+                                <td><a><img id="21" src="heroSprites/heroes/21.PNG" alt="Athena, Goddess of War"></a></td>
+                                <td><a><img id="22" src="heroSprites/heroes/22.PNG" alt="Aphrodite, Goddess of Love"></a></td>
+                                <td><a><img id="23" src="heroSprites/heroes/23.PNG" alt="Shinatobe, Wind Deity"></a></td>
+                            </tr>
+                            <tr>
+                                <td><a><img id="24" src="heroSprites/heroes/24.PNG" alt="Grant, the General"></a></td>
+                                <td><a><img id="25" src="heroSprites/heroes/25.PNG" alt="Frostleaf"></a></td>
+                                <!--<td><a><img id="26" src="heroSprites/heroes/26.png" alt="Dread Knight"></a></td>-->
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class=navItem id="ancientnavinput" data-link="second">
+                    <div id="ancientTable">
+                        <table id="ancientTableIn" style="text-align:center;">
+                            <tr>
+                                <td><a><img src="heroSprites/ancients/1.png" alt="Solomon, Ancient of Wisdom"></a></td>
+                                <td><a><img src="heroSprites/ancients/2.png" alt="Libertas, Ancient of Freedom"></a>
+                                </td>
+                                <td><a><img src="heroSprites/ancients/3.png" alt="Siyalatas, Ancient of Abandon"></a>
+                                </td>
+                                <td><a><img src="heroSprites/ancients/4.png" alt="Khrysos, Ancient of Inheritance"></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a><img src="heroSprites/ancients/5.png" alt="Thusia, Ancient of Vaults"></a></td>
+                                <td><a><img src="heroSprites/ancients/6.png" alt="Mammon, Ancient of Greed"></a></td>
+                                <td><a><img src="heroSprites/ancients/7.png" alt="Mimzee, Ancient of Riches"></a></td>
+                                <td><a><img src="heroSprites/ancients/8.png" alt="Pluto, Ancient of Wealth"></a></td>
+                            </tr>
+                            <tr>
+                                <td><a><img src="heroSprites/ancients/9.png" alt="Dogcog, Ancient of Thrift"></a></td>
+                                <td><a><img src="heroSprites/ancients/10.png" alt="Fortuna, Ancient of Chance"></a></td>
+                                <td><a><img src="heroSprites/ancients/11.png" alt="Atman, Ancient of Souls"></a></td>
+                                <td><a><img src="heroSprites/ancients/12.png" alt="Dora, Ancient of Discovery"></a></td>
+                            </tr>
+                            <tr>
+                                <td><a><img src="heroSprites/ancients/13.png" alt="Bhaal, Ancient of Murder"></a></td>
+                                <td><a><img src="heroSprites/ancients/14.png" alt="Morgulis, Ancient of Death"></a></td>
+                                <td><a><img src="heroSprites/ancients/15.png" alt="Chronos, Ancient of Time"></a></td>
+                                <td><a><img src="heroSprites/ancients/16.png" alt="Bubos, Ancient of Diseases"></a></td>
+                            </tr>
+                            <tr>
+                                <td><a><img src="heroSprites/ancients/17.png" alt="Fragsworth, Ancient of Wrath"></a>
+                                </td>
+                                <td><a><img src="heroSprites/ancients/18.png" alt="Vaagur, Ancient of Impatience"></a>
+                                </td>
+                                <td><a><img src="heroSprites/ancients/19.png"
+                                            alt="Kumawakamaru, Ancient of Shadows"></a></td>
+                                <td><a><img src="heroSprites/ancients/20.png" alt="Chawedo, Ancient of Agitation"></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a><img src="heroSprites/ancients/21.png"
+                                            alt="Hecatoncheir, Ancient of Wallops"></a></td>
+                                <td><a><img src="heroSprites/ancients/22.png" alt="Berserker, Ancient of Rage"></a></td>
+                                <td><a><img src="heroSprites/ancients/23.png" alt="Sniperino, Ancient of Accuracy"></a>
+                                </td>
+                                <td><a><img src="heroSprites/ancients/24.png" alt="Kleptos, Ancient of Thieves"></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a><img src="heroSprites/ancients/25.png"
+                                            alt="Energon, Ancient of Battery Life"></a></td>
+                                <td><a><img src="heroSprites/ancients/26.png" alt="Argaiv, Ancient of Enhancement"></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class=navItem id="achievnavinput" data-link="third">
+                    <div id="achievTable">
+                        <p style="text-align: center; padding: 0; margin: 0; font-weight: bold; border-bottom: 1px solid;">
+                            Achievements</p>
+                        <table id="achievTableIn"></table>
+                    </div>
+                </div>
+                <div class=navItem id="faqnavinput" data-link="fourth">
+                    <a href="http://www.reddit.com/r/ClickerHeroes/comments/2i31z3/faq/">Temporary FAQ from Reddit</a>
+                </div>
+            </div>
+            <script type="text/javascript">
+
+                $('.navItem').hide();
+                $('.navItem:first').show();
+
+
+                $('.link').click(function () {
+                    $('.navItem').hide();
+                    $('.navItem[data-link=' + $(this).data('link') + ']').fadeIn({
+                        width: '200px'
+                    }, 300);
+                });
+            </script>
+        </div>
+    </div>
+</div>
+<div id="popupdiv" class="centerdiv"></div>
+<!--Do not put anything else below this comment-->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    function downloadJSAtOnload() {
+        var element = document.createElement("script");
+        element.src = "ClickerHeroesCalculator.js";
+        document.body.appendChild(element);
+    }
+    if (window.addEventListener) {
+        window.addEventListener("load", downloadJSAtOnload, false);
+    } else if (window.attachEvent) {
+        window.attachEvent("onload", downloadJSAtOnload);
+    } else {
+        window.onload = downloadJSAtOnload;
+    }
+</script>
+</body>
+</html>
